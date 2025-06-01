@@ -9,8 +9,8 @@ directly from the system tray with sudo authentication.
 
 Author: Wojciech Zdziejowski
 License: MIT
-Version: 1.1.1
-Date: 2023-10-16
+Version: 1.0.2
+Date: 2025-06-01
 
 Copyright (c) 2023 Wojciech Zdziejowski
 
@@ -194,7 +194,7 @@ class CustomTooltip(QWidget):
 
         # Status indicator (colored circle)
         self.status_indicator = QLabel()
-        self.status_indicator.setFixedSize(16, 16)
+        self.status_indicator.setFixedSize(20, 20)
         status_layout.addWidget(self.status_indicator)
 
         # Status text
@@ -215,6 +215,12 @@ class CustomTooltip(QWidget):
         self.toggle_button = QPushButton("Toggle Ollama")
         self.toggle_button.setFixedWidth(150)
         button_layout.addWidget(self.toggle_button, 1, Qt.AlignCenter)
+
+        # Add buton to exit app
+        self.exit_button = QPushButton("Close App")
+        self.exit_button.setFixedWidth(150)
+        self.exit_button.clicked.connect(QApplication.quit)
+        button_layout.addWidget(self.exit_button, 0, Qt.AlignRight)
 
         layout.addLayout(button_layout)
 
@@ -270,14 +276,14 @@ class CustomTooltip(QWidget):
         self.icon_label.setPixmap(pixmap)
 
         # Update status indicator (colored circle)
-        indicator_pixmap = QPixmap(16, 16)
+        indicator_pixmap = QPixmap(20, 20)
         indicator_pixmap.fill(Qt.transparent)
         painter = QPainter(indicator_pixmap)
         painter.setRenderHint(QPainter.Antialiasing)
         color = QColor(0, 180, 0) if is_running else QColor(160, 160, 160)
         painter.setBrush(QBrush(color))
         painter.setPen(QPen(Qt.black, 1))
-        painter.drawEllipse(2, 2, 12, 12)
+        painter.drawEllipse(4, 4, 12, 12)  # center
         painter.end()
 
         self.status_indicator.setPixmap(indicator_pixmap)
@@ -440,7 +446,7 @@ class OllamaTray(QSystemTrayIcon):
         self.check_status()  # First status check
         self.timer = QTimer()
         self.timer.timeout.connect(self.check_status)
-        self.timer.start(5000)  # Refresh every 5 seconds (5000ms)
+        self.timer.start(600000)  # Refresh every 10 minutes (600000ms)
 
     def stop_ollama_service(self):
         """Stop Ollama service directly from the menu"""
@@ -525,13 +531,6 @@ class OllamaTray(QSystemTrayIcon):
             # Update menu
             self.status_action.setText(f"Status: {status_text}")
             self.toggle_action.setText("Stop Ollama" if self.is_running else "Start Ollama")
-
-            self.menu.addSeparator()
-
-            # Add exit action
-            exit_action = QAction("Exit Ollama Tray Controller")
-            exit_action.triggered.connect(QApplication.quit)
-            self.menu.addAction(exit_action)
 
         except Exception as e:
             # Handle errors during status check

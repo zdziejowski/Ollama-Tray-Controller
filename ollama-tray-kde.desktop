@@ -2,8 +2,8 @@
 Type=Application
 Name=Ollama Tray
 Comment=System tray app for Ollama control
-Exec=/path/to/ollama_tray_kde.py
-Icon=computer
+Exec=/path/to/Ollama-Tray-Controller/ollama_tray_kde.py
+Icon=/path/to/Ollama-Tray-Controller/src/ollama-black.svg
 Terminal=false
 Categories=Utility;
 StartupNotify=false
