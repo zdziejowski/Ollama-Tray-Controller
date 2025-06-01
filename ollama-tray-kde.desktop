@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Ollama Tray
+Comment=System tray app for Ollama control
+Exec=/path/to/ollama_tray_kde.py
+Icon=computer
+Terminal=false
+Categories=Utility;
+StartupNotify=false
